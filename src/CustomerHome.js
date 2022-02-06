@@ -13,20 +13,21 @@ import API from './api';
 import { useStateValue } from './ContextProvider';
 import { useLoginRequire } from './helpers';
 import TagRoundedIcon from '@mui/icons-material/TagRounded';
-// import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import AdapterDateFns from '@mui/lab/AdapterMoment';
+import moment from 'moment';
 
 
-// import LocalizationProvider from '@mui/lab/LocalizationProvider';
-// import DatePicker from '@mui/lab/DatePicker';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
 
 const CarCard = ({ car, setCars }) => {
   const [rentDays, setRentDays] = useState(0);
-  let dateArr = new Date().toLocaleDateString('en-GB', {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-  }).split('/');
-  const [startDate, setStartDate] = useState(`${dateArr[2]}-${dateArr[1]}-${dateArr[0]}`);
+  // let dateArr = new Date().toLocaleDateString('en-GB', {
+  //   year: 'numeric',
+  //   month: 'numeric',
+  //   day: 'numeric',
+  // }).split('/');
+  const [startDate, setStartDate] = useState(moment());
   const [{ user }] = useStateValue()
   const [showLoginSnack, setShowLoginSnack] = useState(false);
   const navigate = useNavigate()
@@ -40,6 +41,7 @@ const CarCard = ({ car, setCars }) => {
     API.post("rent", {
       car_id: car.id,
       num_of_days: rentDays,
+      start_date: startDate.format("Y-MM-DD")
     }).then(res => {
       if (res.data.status === "success") {
         API.get("get-all-cars").then(res => {
@@ -55,7 +57,7 @@ const CarCard = ({ car, setCars }) => {
   return (
 
     <Card elevation={2} css={css`
-          min-width: 280px;
+          min-width: 320px;
         `}
       key={car.id}
     >
@@ -88,17 +90,24 @@ const CarCard = ({ car, setCars }) => {
             Rent Per Day is {car.rent_per_day}
           </Typography>
         </CardContent>
-        {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
-          label="Basic example"
-          value={startDate}
-          onChange={(newValue) => {
-            console.log(newValue)
-            }}
-            renderInput={(params) => <TextField {...params} />}
-            />
-          </LocalizationProvider> */}
-
+        {
+          car.is_available === "1" ?
+            <CardActions>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  minDate={moment()}
+                  label="Start Date"
+                  value={startDate}
+                  onChange={(newValue) => {
+                    console.log(newValue.format("Y-MM-DD"))
+                    setStartDate(newValue)
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </CardActions>
+            : null
+        }
         {/* <input type="date" /> */}
         <CardActions>
           {car.is_available === "1" ?

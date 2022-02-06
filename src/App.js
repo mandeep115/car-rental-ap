@@ -46,6 +46,8 @@ function App() {
           })
         }
         setIsLoading(false)
+      }).catch(() => {
+        setIsLoading(false)
       })
     } else {
       setIsLoading(false)

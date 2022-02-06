@@ -196,7 +196,7 @@ const Nav = () => {
                 <Button onClick={() => navigate("/login-customer")} css={css`
                 margin-right: 10px;
               `}>
-                  <Typography textAlign="center">LOGIN</Typography>
+                  <Typography color='ActiveBorder' textAlign="center">LOGIN</Typography>
                 </Button>
                 : null
             }
