@@ -20,6 +20,7 @@ const AuthBox = ({ usertype, nameOnSubmit, urlToSubmit, nameOnBox, loginLinks, r
   const [{ user }, dispatch] = useStateValue()
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const navigate = useNavigate()
   const handlePasswordChange = (e) => {
@@ -54,6 +55,11 @@ const AuthBox = ({ usertype, nameOnSubmit, urlToSubmit, nameOnBox, loginLinks, r
         })
         navigate("/")
       }
+      else {
+        console.log(res.data.message)
+        setError(res.data.message)
+      }
+
     })
   }
 
@@ -72,9 +78,8 @@ const AuthBox = ({ usertype, nameOnSubmit, urlToSubmit, nameOnBox, loginLinks, r
           `}
             noValidate
           >
-            <TextField value={username} onChange={handleUsernameChange} id="outlined-basic" label="Username" variant="outlined" />
-            <FormControl variant="outlined">
-
+            <TextField error={error} value={username} onChange={handleUsernameChange} id="outlined-basic" label="Username" variant="outlined" />
+            <FormControl error={error} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
               <OutlinedInput
                 value={password} onChange={handlePasswordChange}
@@ -96,6 +101,12 @@ const AuthBox = ({ usertype, nameOnSubmit, urlToSubmit, nameOnBox, loginLinks, r
               />
             </FormControl>
             <Button variant="text" onClick={handleSubmit}>{nameOnSubmit}</Button>
+            {
+              error ?
+                <Typography color='red'>
+                  {error}
+                </Typography> : null
+            }
           </Box>
           <List css={css`
               display: flex;

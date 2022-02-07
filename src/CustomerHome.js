@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/react'
 
-import { Alert, Button, Card, CardActions, CardContent, CardMedia, FormControl, FormHelperText, InputAdornment, InputLabel, MenuItem, Modal, OutlinedInput, Paper, Select, Snackbar, SnackbarContent, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Card, CardActions, CardContent, CardMedia, FormControl, FormControlLabel, FormHelperText, InputAdornment, InputLabel, MenuItem, Modal, OutlinedInput, Paper, Select, Snackbar, SnackbarContent, Stack, Switch, TextField, Typography } from '@mui/material';
 import { blue, green, red, teal } from '@mui/material/colors';
 import { Box } from '@mui/system';
 
@@ -163,6 +163,7 @@ const CustomerHome = () => {
   // const modalArray = useRef([]);
   const navigate = useNavigate()
   // useLoginRequire(navigate)
+  const [onlyShowAvailable, setOnlyShowAvailable] = useState(false);
   const [cars, setCars] = useState([]);
   useEffect(() => {
     API.get("get-all-cars").then(res => {
@@ -172,9 +173,11 @@ const CustomerHome = () => {
       }
     })
     return () => {
-
     };
   }, []);
+  const handleSwitch = () => {
+    setOnlyShowAvailable(!onlyShowAvailable)
+  }
 
   return (
     <Paper css={css`
@@ -187,8 +190,14 @@ const CustomerHome = () => {
       flex: 1;
       /* padding-bottom: 40px; */
     `}>
-      {cars.map((car) => (
-        <CarCard car={car} setCars={setCars} />
+      <div css={css`
+        width: 100%;
+        margin-left: 5px;
+      `}>
+        <FormControlLabel control={<Switch checked={onlyShowAvailable} onChange={handleSwitch} />} label="Show available cars only" />
+      </div>
+      {cars.filter(car => onlyShowAvailable ? car.is_available === "1" : true).map((car) => (
+        <CarCard car={car} setCars={setCars} key={car.id} />
       ))}
     </Paper>
   )
