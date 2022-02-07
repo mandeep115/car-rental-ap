@@ -72,7 +72,8 @@ const Nav = () => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
 
-          <MenuItem onClick={() => navigate('/')}>
+          <MenuItem onClick={() => navigate('/')}
+            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}>
             <Typography
               variant="h6"
               noWrap
